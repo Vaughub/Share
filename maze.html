@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+        table {
+            border-spacing: 0;
+        }
+        td {
+            background-color: white;
+            padding: 0;
+        }
+        td.room {
+            width: 40px;
+            height: 40px;
+        }
+        td.wall {
+            background-color: black;
+        }
+        td.noWall {
+            background-color: white;
+        }
+        td.small {
+            width: 10px;
+            height: 10px;
+        }
+        td.wide {
+            width: 40px;
+        }
+        td.high {
+            height: 40px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="content"></div>
+
+    <script>
+
+        let contentDiv = document.getElementById('content');
+
+        // model
+        let random = Math.floor(Math.random() * 10) + 3;
+        let labo = initModel(random);
+
+        // controller
+        function initModel(index) {
+            let model = {
+                size: index,
+                rows: modelAllWalls(index)
+            }
+            return model;
+        }
+
+        function modelAllWalls(index) {
+            let allWalls = [];
+            for(let i = 0; i < index + (index + 1); i++) {
+                allWalls[i] = modelWalls(index, i);
+            }
+            return allWalls;
+        }
+
+        function modelWalls(index, allWallsIndex) {
+            let walls = [];
+            for(let i = 0; i < index + (index + 1); i++) {
+                walls[i] = {type: whatWall(i, allWallsIndex), isOpen: checkStatus(i, allWallsIndex)}
+            }
+            return walls;
+        } 
+
+        function whatWall(index, allWallsIndex) {
+            if (allWallsIndex%2 == 0) {
+                return index%2 == 0 ? 'small wall' : 'wide wall'; 
+            } else {
+                return index%2 == 0 ? 'high wall' : 'room';
+            }
+        }
+
+        function checkStatus(index, allWallsIndex) {
+            
+            if (allWallsIndex == 0) return false;
+            else if (allWallsIndex < random*2) {
+                let r = Math.floor(Math.random() * 2);
+                if (index == 0) return false;
+                else if (index == random*2) return false;
+                else if (r == 0) return true;
+                return false;
+            }
+            return false;
+        }
+
+        // view
+        updateView();
+        function updateView() {
+            let tableTr = '';
+            for(let i = 0; i < labo.rows.length; i++) {
+                tableTr += `<tr>${wallMaker(i)}</tr>`;
+            }
+            contentDiv.innerHTML = `
+            <table>
+                ${tableTr}
+            </table>
+            `;
+        }
+
+        function wallMaker(index) {
+            let html = '';
+            for(let i = 0; i < labo.rows.length; i++) {
+                html += `
+                <td class="${labo.rows[index][i].isOpen ? 'noWall' : labo.rows[index][i].type}"></td>
+                `;
+            }
+            return html;
+        }
+
+   
+    </script>
+    
+</body>
+</html>
