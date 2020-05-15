@@ -50,10 +50,10 @@
         let labo = initModel(random);
 
         // view
+        makeEscape();
         updateView();
         function updateView() {
             let tableTr = '';
-            makeEscape();
             for(let i = 0; i < labo.rows.length; i++) {
                 tableTr += `<tr>${wallMaker(i)}</tr>`;
             }
