@@ -49,6 +49,31 @@
         let random = Math.floor(Math.random() * 10) + 3;
         let labo = initModel(random);
 
+        // view
+        updateView();
+        function updateView() {
+            let tableTr = '';
+            makeEscape();
+            for(let i = 0; i < labo.rows.length; i++) {
+                tableTr += `<tr>${wallMaker(i)}</tr>`;
+            }
+            contentDiv.innerHTML = `
+            <table>
+                ${tableTr}
+            </table>
+            `;
+        }
+
+        function wallMaker(index) {
+            let html = '';
+            for(let i = 0; i < labo.rows.length; i++) {
+                html += `
+                <td onclick="clicked(${i},${index})" class="${labo.rows[index][i].isOpen ? 'noWall' : labo.rows[index][i].type}"></td>
+                `;
+            }
+            return html;
+        }
+
         // controller
         function initModel(index) {
             let model = {
@@ -60,7 +85,7 @@
 
         function modelAllWalls(index) {
             let allWalls = [];
-            for(let i = 0; i < index + (index + 1); i++) {
+            for(let i = 0; i < index*2 + 1; i++) {
                 allWalls[i] = modelWalls(index, i);
             }
             return allWalls;
@@ -82,43 +107,39 @@
             }
         }
 
-        function checkStatus(index, allWallsIndex) {
+        function checkStatus(y, x) {
             
-            if (allWallsIndex == 0) return false;
-            else if (allWallsIndex < random*2) {
+            if (x == 0) return false;
+            else if (x < random*2) {
                 let r = Math.floor(Math.random() * 2);
-                if (index == 0) return false;
-                else if (index == random*2) return false;
-                else if (r == 0) return true;
+                if (y == 0) return false;
+                else if (y == random*2) return false;
+                if (r == 0) return true;
                 return false;
             }
             return false;
         }
 
-        // view
-        updateView();
-        function updateView() {
-            let tableTr = '';
-            for(let i = 0; i < labo.rows.length; i++) {
-                tableTr += `<tr>${wallMaker(i)}</tr>`;
+        function makeEscape() {
+            let randomA = Math.floor(Math.random() * (random*2))
+            let randomB = Math.floor(Math.random() * (random*2))
+            let randomC = Math.floor(Math.random() * 2);
+            if (randomA%2 == 0) randomA += 1
+            if (randomB%2 == 0) randomB += 1
+            // y, x
+            if (randomC == 1) {
+                labo.rows[randomB][0].isOpen = true;
+                labo.rows[randomA][random*2].isOpen = true;
+            } else {
+                labo.rows[0][randomA].isOpen = true;
+                labo.rows[random*2][randomB].isOpen = true;
             }
-            contentDiv.innerHTML = `
-            <table>
-                ${tableTr}
-            </table>
-            `;
         }
 
-        function wallMaker(index) {
-            let html = '';
-            for(let i = 0; i < labo.rows.length; i++) {
-                html += `
-                <td class="${labo.rows[index][i].isOpen ? 'noWall' : labo.rows[index][i].type}"></td>
-                `;
-            }
-            return html;
+        function clicked(x, y) {
+            labo.rows[y][x].isOpen = labo.rows[y][x].isOpen ? false : true;
+            updateView();
         }
-
    
     </script>
     
