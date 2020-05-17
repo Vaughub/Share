@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-
     <style>
 
         table {
@@ -38,109 +37,94 @@
     </style>
 </head>
 <body>
-
     <div id="content"></div>
 
     <script>
-
-        let contentDiv = document.getElementById('content');
-
         // model
-        let random = Math.floor(Math.random() * 10) + 3;
-        let labo = initModel(random);
+        let maze = {};
 
         // view
-        makeEscape();
-        updateView();
+        initModel();
         function updateView() {
-            let tableTr = '';
-            for(let i = 0; i < labo.rows.length; i++) {
-                tableTr += `<tr>${wallMaker(i)}</tr>`;
-            }
-            contentDiv.innerHTML = `
+            document.getElementById('content').innerHTML = `
             <table>
-                ${tableTr}
+                ${makeTableData()}
             </table>
             `;
         }
 
-        function wallMaker(index) {
+        function makeTableData() {
             let html = '';
-            for(let i = 0; i < labo.rows.length; i++) {
-                html += `
-                <td onclick="clicked(${i},${index})" class="${labo.rows[index][i].isOpen ? 'noWall' : labo.rows[index][i].type}"></td>
-                `;
+            for (let z = 0; z <= maze.size*2; z++) {
+                html += '<tr>'
+                for (let i = 0; i <= maze.size*2; i++) {
+                    html += `
+                    <td onclick="clicked(${z}, ${i})" class="${maze.rows[z][i].isOpen ? 'noWall' : maze.rows[z][i].type}"></td>
+                    `;
+                }
+                html += '</tr>'
             }
             return html;
         }
 
         // controller
-        function initModel(index) {
-            let model = {
-                size: index,
-                rows: modelAllWalls(index)
-            }
-            return model;
+        function initModel() {
+            maze.size = Math.floor(Math.random() * 11) + 3,
+            maze.escape = makeEscape();
+            maze.rows = makeRows();
+            updateView();
         }
 
-        function modelAllWalls(index) {
-            let allWalls = [];
-            for(let i = 0; i < index*2 + 1; i++) {
-                allWalls[i] = modelWalls(index, i);
+        function makeRows() {
+            let container = [];
+            for (let i = 0; i < maze.size*2 + 1; i++) {
+                container[i] = makeObject(i); // y
             }
-            return allWalls;
+            console.log(container);
+            return container;
         }
 
-        function modelWalls(index, allWallsIndex) {
-            let walls = [];
-            for(let i = 0; i < index + (index + 1); i++) {
-                walls[i] = {type: whatWall(i, allWallsIndex), isOpen: checkStatus(i, allWallsIndex)}
+        function makeObject(y) {
+            let container = [];
+            for (let i = 0; i < maze.size*2 + 1; i++) {
+                container[i] = {type: checkType(y, i), isOpen: checkIsOpen(y, i)}; // x
             }
-            return walls;
-        } 
-
-        function whatWall(index, allWallsIndex) {
-            if (allWallsIndex%2 == 0) {
-                return index%2 == 0 ? 'small wall' : 'wide wall'; 
-            } else {
-                return index%2 == 0 ? 'high wall' : 'room';
-            }
+            return container;
         }
 
-        function checkStatus(y, x) {
-            
-            if (x == 0) return false;
-            else if (x < random*2) {
-                let r = Math.floor(Math.random() * 2);
-                if (y == 0) return false;
-                else if (y == random*2) return false;
-                if (r == 0) return true;
+        function checkType(y, x) {
+            if (y%2 == 0) return x%2 == 0 ? 'small wall' : 'wide wall'; 
+            return x%2 == 0 ? 'high wall' : 'room';
+        }
+
+        function checkIsOpen(y, x) {
+            if (x == 0 || x == maze.size*2) {
+                if (x == 0 && maze.escape.escapePathA == y && maze.escape.vertical == 0) return true;
+                if (x == maze.size*2 && maze.escape.escapePathB == y && maze.escape.vertical == 0) return true;
                 return false;
             }
-            return false;
+            if (y == 0 || y == maze.size*2) {
+                if (y == 0 && maze.escape.escapePathA == x && maze.escape.vertical == 1) return true;
+                if (y == maze.size*2 && maze.escape.escapePathB == x && maze.escape.vertical == 1) return true;
+                return false;
+            }
+            return Math.floor(Math.random() * 2) == 1 ? true : false;
         }
 
         function makeEscape() {
-            let randomA = Math.floor(Math.random() * (random*2))
-            let randomB = Math.floor(Math.random() * (random*2))
+            let randomA = Math.floor(Math.random() * maze.size*2);
+            let randomB = Math.floor(Math.random() * maze.size*2);
             let randomC = Math.floor(Math.random() * 2);
-            if (randomA%2 == 0) randomA += 1
-            if (randomB%2 == 0) randomB += 1
-            // y, x
-            if (randomC == 1) {
-                labo.rows[randomB][0].isOpen = true;
-                labo.rows[randomA][random*2].isOpen = true;
-            } else {
-                labo.rows[0][randomA].isOpen = true;
-                labo.rows[random*2][randomB].isOpen = true;
-            }
+            if (randomA%2 == 0) randomA += 1;
+            if (randomB%2 == 0) randomB += 1;
+            return {escapePathA: randomA, escapePathB: randomB, vertical: randomC};
         }
 
-        function clicked(x, y) {
-            labo.rows[y][x].isOpen = labo.rows[y][x].isOpen ? false : true;
+        function clicked(y, x) {
+            maze.rows[y][x].isOpen = maze.rows[y][x].isOpen ? false : true;
             updateView();
         }
-   
+
     </script>
     
 </body>
