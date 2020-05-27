@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #content {
+            border-style: solid;
+            background-color: #FFDC00;
+            width: 200px;
+            height: 200px;
+            margin: 125px auto;   
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="content"></div>
+    <script>
+
+        let contentDiv = document.getElementById('content');
+        const model = {
+            users: [],
+            id: null,
+            page: 'questionView',
+            date: null,
+            question: ['quest1', 'quest2', 'quest3', 'quest24'],
+            questionIndex: 21,
+        };
+
+        let nameInput;
+        let emailInput;
+        let orgInput;
+        let groupInput;
+
+        updateView();
+        function updateView() {
+            if (model.page == 'loginView') loginView();
+            else if (model.page == 'questionView') questionView();
+            else if (model.page == 'resultView') resultView();
+        }
+
+        function loginView() {
+            // let html = '';
+            html = `
+                <h3>Sign in</h3>
+                <input oninput="nameInput = this.value" placeholder="Name" type="text"><br>
+                <input oninput="emailInput = this.value" placeholder="E-mail" type="text">
+                <input oninput="orgInput = this.value" placeholder="Organization" type="text">
+                <input oninput="groupInput = this.value" placeholder="Group" type="text">
+                <button onclick="addInfo()">Submit</button>
+            `;
+            contentDiv.innerHTML = html;
+        }
+
+        function questionView() {
+            contentDiv.innerHTML = `
+            <h1>${model.question[model.questionIndex]}</h1>
+            <p>${model.questionIndex}</p>
+            <button onclick="nextQuestion()">${model.questionIndex < 23 ? 'Next' : 'Done'}</button>
+            `;
+        }
+
+        function resultView() {
+            contentDiv.innerHTML = `
+            <h3>Result</h3>
+            `;
+        }
+
+        function addInfo() {
+            let obj = {name: nameInput, email: emailInput, org: orgInput, answer: [], info: [], id: model.users.length};
+            model.users.push(obj);
+            model.date = Date.now();
+            model.page = 'questionView';
+            // model.id = model.users.length - 1;
+            updateView();
+        }
+
+        function nextQuestion() {
+            if (model.questionIndex < 23) model.questionIndex += 1;
+            else model.page = 'resultView';
+            updateView();
+        }
+
+    </script>
+    
+</body>
+</html>
