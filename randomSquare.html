@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <svg width="1200" height="800">
+        <!-- <rect x="0" y="0" width="100%" height="100%" fill="lightgray" /> -->
+        <!-- <g id="content">
+
+        </g> -->
+    </svg>
+    <script>
+        let content = document.getElementById('content');
+        class Box {
+            constructor() {
+                this._color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+                this._x = Math.floor(Math.random() * 600);
+                this._y = Math.floor(Math.random() * 400);
+                this._width = 100 + Math.floor(Math.random() * 500);
+                this._height = 100 + Math.floor(Math.random() * 300);
+            }
+        }
+        
+        // class boxSet {
+        //     constructor() {
+        //         this._boxSet = [];
+        //     }
+        // }
+    
+        class BoxView {
+            constructor(box) {
+                this._svg = document.getElementsByTagName('svg')[0];
+                this._box = box;
+            }
+    
+            show() {
+                boxView._svg.innerHTML = `
+                <rect width="${boxView._box._width}" height="${boxView._box._height}" x="${boxView._box._x}" y="${boxView._box._y}" style="fill:${boxView._box._color};stroke-width:3;stroke:rgb(0,0,0)" />
+                `;
+            }
+        }
+
+    
+        var box = new Box();
+        let boxSet = [
+            new Box(),
+            new Box(),
+            new Box(),
+            new Box(),
+        ];
+        var boxView = new BoxView(box);
+        boxView.show();
+    </script>
+    
+</body>
+</html>
