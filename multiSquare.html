@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        svg {
+            top:0; 
+            left:0; 
+            height:100%; 
+            width:100%; 
+            position:fixed; 
+        }
+    </style>
+</head>
+<body>
+    <svg></svg>
+    <script>
+        class Box {
+            constructor() {
+                this._color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+                this._x = Math.floor(Math.random() * 600);
+                this._y = Math.floor(Math.random() * 400);
+                this._width = 100 + Math.floor(Math.random() * 500);
+                this._height = 100 + Math.floor(Math.random() * 300);
+            }
+        }
+
+        class Boxset {
+            constructor() {
+                this._box = [];
+                let random = Math.floor(Math.random() * 10) + 1;
+                for (let i = 0; i < random; i++) {
+                    this._box.push(new Box());
+                }
+            }
+            getHtml() {
+                let html = '';
+                for (let i = 0; i < this._box.length; i++) {
+                    html += `
+                        <rect onclick="boxes.removeBox(${i})" width="${this._box[i]._width}" height="${this._box[i]._height}" x="${this._box[i]._x}" 
+                        y="${this._box[i]._y}" style="fill:${this._box[i]._color};stroke-width:3;stroke:rgb(0,0,0)" />
+                    `;
+                }
+                return html;
+            }
+            show() {
+                document.querySelector('svg').innerHTML = boxes.getHtml();
+            }
+            removeBox(i) {
+                this._box.splice(i, 1);
+                boxes.show();
+            }
+        }
+
+        let boxes = new Boxset();
+
+        boxes.show();
+    </script>
+</body>
+</html>
