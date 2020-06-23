@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://www.gstatic.com/firebasejs/7.15.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.3/firebase-firestore.js"></script>
+    <style>
+        * {
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <form id="addMember">
+            <input type="text" name="name" placeholder="Name">
+            <input type="text" name="comment" placeholder="Comment">
+            <button>Add comment</button>
+        </form>
+        <ul id="bandlist"></ul>
+    </div>
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyAqalwNZs-sx4YY3shy7-Yvj_lmIrDHDUc",
+            authDomain: "learn-to-connect.firebaseapp.com",
+            databaseURL: "https://learn-to-connect.firebaseio.com",
+            projectId: "learn-to-connect",
+            storageBucket: "learn-to-connect.appspot.com",
+            messagingSenderId: "235758121960",
+            appId: "1:235758121960:web:c70a41861a838f6c28ea5d",
+            measurementId: "G-4CTB8KC2LM"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
+    <script src="sandbox.js"></script>
+</body>
+</html>
